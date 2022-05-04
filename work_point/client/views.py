@@ -24,7 +24,7 @@ except:
 
 
 class Register(APIView):
-	permission_classes = (IsAuthenticated,)
+
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			return Response({'msg':'User with same username exists'},status=404)
@@ -37,7 +37,7 @@ class Register(APIView):
 				return Response(serializer.errors)
 
 class Login(APIView):
-	permission_classes = (IsAuthenticated,)
+	
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			obj = authenticate(username=request.data['username'],password=request.data['password'])
@@ -62,7 +62,7 @@ class Logout(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class VerifyToken(APIView):
-	permission_classes = (IsAuthenticated,)
+	
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			user = User.objects.get(username=request.data['username'])
@@ -75,7 +75,7 @@ class VerifyToken(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class ForgotPassword(APIView):
-	permission_classes = (IsAuthenticated,)
+	
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			user =  User.objects.get(username=request.data['username'])
@@ -92,7 +92,7 @@ class ForgotPassword(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class VerifyOTP(APIView):
-	permission_classes = (IsAuthenticated,)
+
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			user =  User.objects.get(username=request.data['username'])
@@ -109,7 +109,7 @@ class VerifyOTP(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class SetPassword(APIView):
-	permission_classes = (IsAuthenticated,)
+	
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			user = User.objects.get(username__exact=request.data['username'])
