@@ -65,3 +65,4 @@ class CustomJob(admin.ModelAdmin):
 admin.site.register(Skill)
 
 admin.site.register(Proposal)
+admin.site.register(Message)

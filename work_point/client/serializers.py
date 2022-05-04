@@ -28,30 +28,44 @@ class LoginSerializer(serializers.ModelSerializer):
 		token,_ = Token.objects.get_or_create(user=obj)
 		return token.key
 
-
+class SkillSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Skill
+		fields = ['id','name']
+		
 class UserSerializer(serializers.ModelSerializer):
 	token = serializers.SerializerMethodField()
+	skill=serializers.SerializerMethodField()
 	class Meta:
 		model = User
-		fields = ['username','first_name','last_name','gender','country','email','mobile','is_client','about','img_link','token']
+		fields = ['username','first_name','last_name','gender','country','email','mobile','is_client','about','img_link','token','skill']
+	
+
 	
 	def get_token(self,obj):
 		token,_ = Token.objects.get_or_create(user=obj)
 		return token.key
 
+	def get_skill(self,obj):
+		data = Skill.objects.filter(user=obj.id)
+		serializer = SkillSerializer(data,many=True)
+		return serializer.data
 
 
 
 
 class JobSerializer(serializers.ModelSerializer):
+	skill=serializers.SerializerMethodField()
 	class Meta:
 		model = Job
-		fields = '__all__'
+		fields = ['id','title','description','posted_date','is_completed','price','is_occupied','client','likes','unlikes','user','skill']
 
-class SkillSerializer(serializers.ModelSerializer):
-	class Meta:
-		model = Skill
-		fields = ['id','name']
+	def get_skill(self,obj):
+		data = Skill.objects.filter(job=obj.id)
+		serializer = SkillSerializer(data,many=True)
+		return serializer.data
+
+
 
 class UserOnClientSidePostSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -218,4 +232,4 @@ class PropesalHistorySerializer(serializers.ModelSerializer):
 	user=UserSerializer()
 	class Meta:
 		model=Proposal
-		fields=['user','job','is_accepted']
+		fields=['user','job','status','is_accepted']

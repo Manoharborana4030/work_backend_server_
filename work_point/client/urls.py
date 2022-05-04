@@ -49,7 +49,6 @@ urlpatterns = [
     path('message_post',views.MessagePost.as_view(),name='message_post'),
     path('user_profile_search',views.UserProfileSearch.as_view(),name='user_profile_search'),
     path('user_profile_details/<int:id>',views.UserProfileDetails.as_view(),name='user_profile_details'),
-    path('create_blank_chat_list/<int:id>',views.CreateBlankChatList.as_view(),name='create_blank_chat_list'),
     path('message_counter',views.MessageCount.as_view(),name='message_counter'),
     path('clear_message_count',views.ClearMessageCount.as_view(),name='clear_message_count'),
     path('user_details_id/<int:id>',views.UserDetailsId.as_view(),name='user_details_id'),
@@ -58,4 +57,5 @@ urlpatterns = [
     path('chat_history',views.ChatHistory.as_view(),name='chat_history'),
     path('client_n',views.Clientnotfcation.as_view(),name='client_n'),   
     path('proposal_history',views.ProposalHistory.as_view(),name='proposal_history'),   
+    path('client_status',views.ClientStatus.as_view(),name='client_status'),   
 ]

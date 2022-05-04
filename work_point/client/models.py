@@ -75,6 +75,9 @@ class Message(models.Model):
     reciever=models.ForeignKey(User,on_delete=models.CASCADE,related_name='message_reciever')
     msg=models.TextField(blank=True)
     
+    def __str__(self):
+        return self.msg
+    
 class MessageCounter(models.Model):
     count=models.IntegerField()
     user=models.ForeignKey(User,on_delete=models.CASCADE,related_name='message_counter_user')

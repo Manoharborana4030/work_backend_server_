@@ -105,8 +105,10 @@ class VerifyOTP(APIView):
 class SetPassword(APIView):
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
-			user = User.objects.get(username=request.data['username'])
+			user = User.objects.get(username__exact=request.data['username'])
+			print(request.data['password'],"@@@@@@@@@@@@@@@@@@")
 			user.set_password(request.data['password'])
+			user.save()
 			return Response({'msg':"Password has changed"})
 		else:
 			return Response({'msg':"username doesn't exist"},status=404)
@@ -275,18 +277,22 @@ class ProposalAction(APIView):
 	def put(self,request,id):
 		if User.objects.filter(username=request.data['username']).exists():
 			user = User.objects.get(username=request.data['username'])
-			job = Job.objects.get(id=id)
+			obj = Proposal.objects.get(id=id)
+			job = Job.objects.get(id=obj.job.id)
+			proposarobj=User.objects.get(id=obj.user.id)
 			print(user,'user')
-			if Job.objects.filter(id=id).exists():
-				obj = Proposal.objects.get(id=id)
+			if Job.objects.filter(id=obj.job.id).exists():
+				
 				print(obj)
-				serializer = MakeProposalSerializer(data=request.data,inxstance=obj,partial=True)
+				serializer = MakeProposalSerializer(data=request.data,instance=obj,partial=True)
 				if serializer.is_valid():
 					serializer.save()
 					print(request.data['is_accepted'])
 					if request.data['is_accepted'] == "True":
-						if not job.user.filter(id=user.id).exists():
-							job.user.add(user)
+						job.is_occupied=True
+						job.save()
+						if not job.user.filter(id=proposarobj.id).exists():
+							job.user.add(proposarobj)
 					return Response({'msg':'Proposal has been accepted/rejected'})
 				else:
 					return Response(serializer.errors)
@@ -374,33 +380,35 @@ class MessagePost(APIView):
 		if User.objects.filter(username=request.data['username']).exists():
 			request.data['sender']=User.objects.get(username=request.data['username']).id
 			serializer=MessageSerializer(data=request.data)
-			if serializer.is_valid():
-				serializer.save()
-				request.data['user']=request.data['reciever']
-				request.data['count']=1
-				if MessageCounter.objects.filter(sender=request.data['sender']).filter(user=request.data['user']).exists():
-					obj=MessageCounter.objects.filter(sender=request.data['sender']).filter(user=request.data['user'])[0]
-					# return Response({"id":obj.count})
-					request.data['count']=obj.count+1
-					print(request.data['count'],"@@@@")
-					serializer=MessageCounterSerializer(data=request.data,instance=obj)
-					if serializer.is_valid():
+			if len(request.data['msg'].strip())!=0:
+				if serializer.is_valid():
+					serializer.save()
+					request.data['user']=request.data['reciever']
+					request.data['count']=1
+					if MessageCounter.objects.filter(sender=request.data['sender']).filter(user=request.data['user']).exists():
+						obj=MessageCounter.objects.filter(sender=request.data['sender']).filter(user=request.data['user'])[0]
+						# return Response({"id":obj.count})
+						request.data['count']=obj.count+1
+						print(request.data['count'],"@@@@")
+						serializer=MessageCounterSerializer(data=request.data,instance=obj)
+						if serializer.is_valid():
 
-						serializer.save()
+							serializer.save()
+						else:
+							return Response(serializer.errors)
 					else:
-						return Response(serializer.errors)
+						serializer=MessageCounterSerializer(data=request.data)
+						if serializer.is_valid():
+
+							serializer.save()
+						else:
+							return Response(serializer.errors)
+
+					return Response({'msg':'Message Has been sent!'})
 				else:
-					serializer=MessageCounterSerializer(data=request.data)
-					if serializer.is_valid():
-
-						serializer.save()
-					else:
-						return Response(serializer.errors)
-
-				return Response({'msg':'Message Has been sent!'})
+					return Response(serializer.errors) 
 			else:
-				return Response(serializer.errors) 
-			
+				return Response({'msg':'blank Message Has been sent!'})
 		else:
 			return Response({'msg':'No account associated with given username'},status=404)
 
@@ -414,15 +422,6 @@ class ChatList(APIView):
 		else:
 			return Response({'msg':'No account associated with given username'},status=404)
 
-class CreateBlankChatList(APIView):
-	def post(self,request,id):
-		if User.objects.filter(username=request.data['username']).exists():
-			request.data['sender']=User.objects.get(username=request.data['username']).id
-
-			
-
-		else:
-			return Response({'msg':'No account associated with given username'},status=404)
 
 
 class UserDetailsId(APIView):
@@ -524,6 +523,17 @@ class ProposalHistory(APIView):
 			userobj=User.objects.get(username=request.data['username'])
 			obj=Proposal.objects.filter(client_id=userobj.id).filter(Q(is_accepted=True)|Q(is_accepted=False))
 			serializer=PropesalHistorySerializer(obj,many=True)	
+			return Response(serializer.data)
+		else:
+			return Response({'msg':'No account associated with given username'},status=404)
+
+class ClientStatus(APIView):
+	def post(self,request):
+		if User.objects.filter(username=request.data['username']).exists():
+			userobj=User.objects.get(username=request.data['username'])
+			proposalobj=Proposal.objects.filter(client_id=userobj.id).filter(is_accepted=True)
+
+			serializer=PropesalHistorySerializer(proposalobj,many=True)	
 			return Response(serializer.data)
 		else:
 			return Response({'msg':'No account associated with given username'},status=404)
