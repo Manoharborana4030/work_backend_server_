@@ -24,6 +24,7 @@ except:
 
 
 class Register(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			return Response({'msg':'User with same username exists'},status=404)
@@ -36,6 +37,7 @@ class Register(APIView):
 				return Response(serializer.errors)
 
 class Login(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			obj = authenticate(username=request.data['username'],password=request.data['password'])
@@ -49,6 +51,7 @@ class Login(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class Logout(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			user = User.objects.get(username=request.data['username'])
@@ -59,6 +62,7 @@ class Logout(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class VerifyToken(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			user = User.objects.get(username=request.data['username'])
@@ -71,6 +75,7 @@ class VerifyToken(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class ForgotPassword(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			user =  User.objects.get(username=request.data['username'])
@@ -87,6 +92,7 @@ class ForgotPassword(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class VerifyOTP(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			user =  User.objects.get(username=request.data['username'])
@@ -103,6 +109,7 @@ class VerifyOTP(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class SetPassword(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			user = User.objects.get(username__exact=request.data['username'])
@@ -114,7 +121,7 @@ class SetPassword(APIView):
 			return Response({'msg':"username doesn't exist"},status=404)
 
 class EditProfile(APIView):
-	# permission_classes = (IsAuthenticated,)
+	permission_classes = (IsAuthenticated,)
 	def put(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			user = User.objects.get(username=request.data['username'])
@@ -128,7 +135,7 @@ class EditProfile(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class UserDetails(APIView):
-	# permission_classes = (IsAuthenticated,)
+	permission_classes = (IsAuthenticated,)
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			user = User.objects.get(username=request.data['username'])
@@ -138,6 +145,7 @@ class UserDetails(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class JobPost(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			request.data['client'] = User.objects.get(username=request.data['username']).id
@@ -151,6 +159,7 @@ class JobPost(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class EditJob(APIView):
+	permission_classes = (IsAuthenticated,)
 	def put(self,request,id):
 		if User.objects.filter(username=request.data['username']).exists():
 			job = Job.objects.get(id=id) 
@@ -164,6 +173,7 @@ class EditJob(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class GetJobDetail(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request,id):
 		if User.objects.filter(username=request.data['username']).exists():
 			job = Job.objects.get(id=id) 
@@ -173,6 +183,7 @@ class GetJobDetail(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class DeleteJob(APIView):
+	permission_classes = (IsAuthenticated,)
 	def delete(self,request,id):
 		if User.objects.filter(username=request.data['username']).exists():
 			job = Job.objects.get(id=id) 
@@ -182,6 +193,7 @@ class DeleteJob(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class LikeJob(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request,id):
 		if User.objects.filter(username=request.data['username']).exists():
 			user = User.objects.get(username=request.data['username'])
@@ -201,6 +213,7 @@ class LikeJob(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class DislikeJob(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request,id):
 		if User.objects.filter(username=request.data['username']).exists():
 			user = User.objects.get(username=request.data['username'])
@@ -220,6 +233,7 @@ class DislikeJob(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class AsignJobToUser(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request,id):
 		if User.objects.filter(username=request.data['username']).exists():
 			user = User.objects.get(username=request.data['username'])
@@ -237,6 +251,7 @@ class AsignJobToUser(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class UpdateStatus(APIView):
+	permission_classes = (IsAuthenticated,)
 	def put(self,request,id):
 		if Job.objects.filter(id=id).exists():
 			job = Job.objects.get(id=id)
@@ -250,6 +265,7 @@ class UpdateStatus(APIView):
 			return Response({"msg":"Invalid Job Id"},status=404)
 
 class ClientJobList(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			user = User.objects.get(username=request.data['username'])
@@ -260,6 +276,7 @@ class ClientJobList(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class MakeProposal(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			request.data['client'] = Job.objects.get(id=request.data['job']).client.id
@@ -274,6 +291,7 @@ class MakeProposal(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class ProposalAction(APIView):
+	permission_classes = (IsAuthenticated,)
 	def put(self,request,id):
 		if User.objects.filter(username=request.data['username']).exists():
 			user = User.objects.get(username=request.data['username'])
@@ -302,12 +320,14 @@ class ProposalAction(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class SkillList(APIView):
+	permission_classes = (IsAuthenticated,)
 	def get(self,request):
 		obj = Skill.objects.all()
 		serializer = SkillSerializer(obj,many=True)
 		return Response(serializer.data)
 
 class AddUserSKill(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			user = User.objects.get(username=request.data['username'])
@@ -325,6 +345,7 @@ class AddUserSKill(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class AddJobSKill(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request):
 		if Job.objects.filter(id=request.data['job']).exists():
 			job = Job.objects.get(id=request.data['job'])
@@ -342,6 +363,7 @@ class AddJobSKill(APIView):
 			return Response({'msg':'Invalid Job ID'},status=404)
 
 class UserJobList(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			user = User.objects.get(username=request.data['username'])
@@ -365,6 +387,7 @@ class UserJobList(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class ProposalDetail(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request,id):
 		if User.objects.filter(username=request.data['username']).exists():
 			obj = Proposal.objects.filter(job_id=id).get(user_id=request.data['proposer_id'])
@@ -376,6 +399,7 @@ class ProposalDetail(APIView):
 
 
 class MessagePost(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			request.data['sender']=User.objects.get(username=request.data['username']).id
@@ -413,6 +437,7 @@ class MessagePost(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class ChatList(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			smobj=User.objects.get(username=request.data['username'])
@@ -425,6 +450,7 @@ class ChatList(APIView):
 
 
 class UserDetailsId(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request,id):
 		if User.objects.filter(username=request.data['username']).exists():
 			obj=User.objects.get(id=id)
@@ -438,6 +464,7 @@ class UserDetailsId(APIView):
 
 #message Counter
 class MessageCount(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			userobj=User.objects.get(username=request.data['username'])
@@ -448,6 +475,7 @@ class MessageCount(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class ClearMessageCount(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			userobj=User.objects.get(username=request.data['username'])
@@ -463,6 +491,7 @@ class ClearMessageCount(APIView):
 
 
 class ChatDetails(APIView):
+	permission_classes = (IsAuthenticated,)
 	def get(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			return Response({""})
@@ -473,6 +502,7 @@ class ChatDetails(APIView):
 
 
 class UserProfileSearch(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			qry=User.objects.filter(Q(username__icontains = request.data['input'])|Q(first_name__icontains = request.data['input'])|Q(last_name__icontains = request.data['input']))
@@ -484,6 +514,7 @@ class UserProfileSearch(APIView):
 	
 
 class ChatHistory(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			qry=User.objects.filter(Q(username=request.data['username'])|Q(id=request.data['id'])|Q()|Q())
@@ -494,6 +525,7 @@ class ChatHistory(APIView):
 
 	
 class Clientnotfcation(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			cid_ = User.objects.get(username=request.data['username']).id
@@ -507,6 +539,7 @@ class Clientnotfcation(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class UserProfileDetails(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request,id):
 		if User.objects.filter(username=request.data['username']).exists():
 			qry=User.objects.filter(id=id)
@@ -518,6 +551,7 @@ class UserProfileDetails(APIView):
 
 
 class ProposalHistory(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			userobj=User.objects.get(username=request.data['username'])
@@ -528,6 +562,7 @@ class ProposalHistory(APIView):
 			return Response({'msg':'No account associated with given username'},status=404)
 
 class ClientStatus(APIView):
+	permission_classes = (IsAuthenticated,)
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			userobj=User.objects.get(username=request.data['username'])

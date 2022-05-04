@@ -12,11 +12,13 @@ from rest_framework import status
 from rest_framework import generics
 from client.models import  Proposal, User as ClientUser
 from rest_framework import filters
+from rest_framework.permissions import IsAuthenticated
 
 
 
 
 class userqal(APIView):
+    permission_classes = (IsAuthenticated,)
     def  get(self,request):
         id_ = ClientUser.objects.get(username=request.data['username']).id
         userqal = UserQualification.objects.filter(user_id=id_)  
@@ -33,6 +35,7 @@ class userqal(APIView):
    
 
 class userqualview(APIView):
+    permission_classes = (IsAuthenticated,)
     def put(self,request,pk):
         # id_ = ClientUser.objects.get(username=request.data['username']).id
         usrqual = UserQualification.objects.get(user=pk)
@@ -46,6 +49,7 @@ class userqualview(APIView):
             
                
 class userexpview(APIView):
+    permission_classes = (IsAuthenticated,)
     def get(self,request,id):
         userview = UserExperience.objects.get(id=id)
         serializer = userexpserializer(userview)
@@ -53,6 +57,7 @@ class userexpview(APIView):
 
                    
 class getuserexp(APIView):
+    permission_classes = (IsAuthenticated,)
     def get(self,request):
         id_ = ClientUser.objects.get(username=request.data['username']).id
         usrexp = UserExperience.objects.filter(user_id=id_)  
@@ -69,6 +74,7 @@ class getuserexp(APIView):
 
 
 class userexperienceview(APIView):
+    permission_classes = (IsAuthenticated,)
     def put(self,request,pk):
         usrqual = UserExperience.objects.get(id=pk)
         print(userqal,'ndksdnskdk')
@@ -82,6 +88,7 @@ class userexperienceview(APIView):
              return Response({'msg':'data not update'},status=status.HTTP_400_BAD_REQUEST)
                  
 class jobviews(APIView):
+    permission_classes = (IsAuthenticated,)
     def get(self,request):
         jobviews = Job.objects.all().filter(is_occupied=False)
         serializer = jobviewserializer(jobviews,many=True)
@@ -89,6 +96,7 @@ class jobviews(APIView):
 
 
 class jobsearchview(generics.ListCreateAPIView):
+    permission_classes = (IsAuthenticated,)
     search_fields = ['title']
     filter_backends = (filters.SearchFilter,)
     queryset = Job.objects.all().filter(is_occupied=False)
@@ -96,6 +104,7 @@ class jobsearchview(generics.ListCreateAPIView):
 
 
 class Notifications(APIView):
+    permission_classes = (IsAuthenticated,)
     def get(self,request):
         uid_ = ClientUser.objects.get(username=request.data['username']).id
         # userview = Proposal.objects.filter(user_id=uid_)
@@ -111,6 +120,7 @@ class Notifications(APIView):
         return Response({'msg':'Job has been Deleted'},status=200)
 
 class Showstatus(APIView):
+    permission_classes = (IsAuthenticated,)
     def put(self,request,id):
         # uid_ = ClientUser.objects.get(username=request.data['username']).id
         proposal = Proposal.objects.get(id=id)

@@ -86,7 +86,7 @@ DATABASES = {
         'NAME': 'work_point',
         'USER': 'work_admin',
         'PASSWORD': 'YpFyCwcdpKAswevhXMjy',
-        'HOST': '   ',
+        'HOST': 'work-point.cckrazp59xhr.ap-south-1.rds.amazonaws.com',
         'PORT': '3306'
     }
 }
