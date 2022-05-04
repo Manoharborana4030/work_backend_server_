@@ -2,7 +2,7 @@ from traceback import print_tb
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.test import client
-
+from django.db.models import Q
 from client.serializers import NotificationUserSerializer
 from .models import *
 from .serializers import *
@@ -96,7 +96,6 @@ class jobviews(APIView):
 
 
 class jobsearchview(generics.ListCreateAPIView):
-    permission_classes = (IsAuthenticated,)
     search_fields = ['title']
     filter_backends = (filters.SearchFilter,)
     queryset = Job.objects.all().filter(is_occupied=False)

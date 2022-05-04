@@ -529,7 +529,7 @@ class Clientnotfcation(APIView):
 	def post(self,request):
 		if User.objects.filter(username=request.data['username']).exists():
 			cid_ = User.objects.get(username=request.data['username']).id
-			clientview = Proposal.objects.filter(client_id=cid_,is_accepted = None)
+			clientview = Proposal.objects.filter(Q(client_id=cid_)&Q(is_accepted = None))
 			print(clientview,"((()))")
 			# print(c.is_accepted,"uuuuuhhh")
 		
