@@ -56,14 +56,19 @@ class UserSerializer(serializers.ModelSerializer):
 
 class JobSerializer(serializers.ModelSerializer):
 	skill=serializers.SerializerMethodField()
+	client_name=serializers.SerializerMethodField()
 	class Meta:
 		model = Job
-		fields = ['id','title','description','posted_date','is_completed','price','is_occupied','client','likes','unlikes','user','skill']
+		fields = ['id','title','description','posted_date','is_completed','price','is_occupied','client','likes','unlikes','user','skill','client_name']
 
 	def get_skill(self,obj):
 		data = Skill.objects.filter(job=obj.id)
 		serializer = SkillSerializer(data,many=True)
 		return serializer.data
+
+	def get_client_name(self,obj):
+		data=User.objects.get(id=obj.client)
+		return data.first_name+ data.last_name
 
 
 

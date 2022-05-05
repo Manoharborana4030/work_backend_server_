@@ -15,6 +15,12 @@ from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated
 
 
+class userqualificationview(APIView):
+    permission_classes = (IsAuthenticated,)
+    def get(self,request,id):
+        userview = UserQualification.objects.get(id=id)
+        serializer = userqualserializer(userview)
+        return Response(serializer.data)
 
 
 class userqal(APIView):
@@ -38,7 +44,7 @@ class userqualview(APIView):
     permission_classes = (IsAuthenticated,)
     def put(self,request,pk):
         # id_ = ClientUser.objects.get(username=request.data['username']).id
-        usrqual = UserQualification.objects.get(user=pk)
+        usrqual = UserQualification.objects.get(id=pk)
         serializer = userqualserializer(usrqual, data=request.data,partial=True)
         if serializer.is_valid():
             serializer.save()

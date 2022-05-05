@@ -9,7 +9,7 @@ class User(AbstractUser):
     is_client = models.BooleanField(default=False)
     mobile = models.CharField(max_length=12)
     gender = models.CharField(max_length=9)
-    country = models.CharField(max_length=30)
+    country = models.CharField(max_length=30,blank=True)
     about = models.TextField(null=True)
     img_link = models.CharField(null=True,max_length=100)
     otp=models.IntegerField(null=True)
